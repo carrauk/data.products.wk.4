@@ -13,21 +13,33 @@ library(shiny)
 shinyUI(fluidPage(
   
   # Application title
-  titlePanel("Old Faithful Geyser Data"),
+  titlePanel("Predict chick weight"),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
+       selectInput("in.diet",
+                   "Select Diet:",
+                   choices=c("experimental diet 1" = "1",
+                             "experimental diet 2" = "2",
+                             "experimental diet 3" = "3",
+                             "experimental diet 4" = "4")
+                   ),
+       
+       sliderInput("in.days.on.diet",
+                   "Select days on diet:",
+                   min=0, max=21, value=14
+                   )
+       
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
-       plotOutput("distPlot")
+       h4("Parameters entered (and resulting prediction)"),
+       textOutput("out.diet"),
+       textOutput("out.days.on.diet"),
+       textOutput("out.pred.weight"),
+       plotOutput("out.plot")
     )
   )
 ))

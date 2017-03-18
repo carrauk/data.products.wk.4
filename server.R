@@ -1,26 +1,43 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
-
+library(datasets)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
    
-  output$distPlot <- renderPlot({
+        model <- function(){
+                data("ChickWeight"); data <- ChickWeight;
+                names(data) <- tolower(names(data))
+                # create model on subset of data
+                data <- data[data$diet==input$in.diet,]
+                mdl <- lm(weight ~ time, data=data)
+                return(mdl)
+        }
+        
+  output$out.plot <- renderPlot({
+    # generate plot
+    plot(predict(model(), data.frame(time=c(1:22))),
+         type="b",
+         col="blue",
+         main=sprintf("Predicted weight for chick on %s",input$in.diet),
+         xlab="time on diet (days)",
+         ylab="Weight (gm)")
     
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
+    # add abline to predicted weight based on parameters
+    abline(v=input$in.days.on.diet,col="red")
+    abline(h=predict(mdl, data.frame(time=c(input$in.days.on.diet))),col="red")
   })
+  
+  output$out.diet <- renderText({
+          sprintf("Diet selected: %s", input$in.diet)
+  })
+  
+  output$out.days.on.diet <- renderText({
+          sprintf("Days on Diet : %s", input$in.days.on.diet)
+  })
+  
+  output$out.pred.weight <- renderText({
+          pred.wt <- predict(model(), data.frame(time=c(input$in.days.on.diet)))
+          sprintf("Predicted weight (gm) : %s", pred.wt)
+  })
+  
   
 })

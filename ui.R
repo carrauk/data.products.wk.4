@@ -6,7 +6,7 @@
 # 
 #    http://shiny.rstudio.com/
 #
-
+## @knitr shiny.ui
 library(shiny)
 
 # Define UI for application that draws a histogram

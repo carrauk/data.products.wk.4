@@ -1,5 +1,7 @@
 library(shiny)
 library(datasets)
+
+## @knitr shiny.server
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
    
@@ -7,8 +9,7 @@ shinyServer(function(input, output) {
                 data("ChickWeight"); data <- ChickWeight;
                 names(data) <- tolower(names(data))
                 # create model on subset of data
-                data <- data[data$diet==input$in.diet,]
-                mdl <- lm(weight ~ time, data=data)
+                mdl <- lm(weight ~ time, data=data[data$diet==input$in.diet,])
                 return(mdl)
         }
         
@@ -25,7 +26,7 @@ shinyServer(function(input, output) {
     
     # add abline to predicted weight based on parameters
     abline(v=input$in.days.on.diet,col="red")
-    abline(h=predict(model(), data.frame(time=c(input$in.days.on.diet))),col="red")
+    abline(h=predict(mdl, data.frame(time=c(input$in.days.on.diet))),col="red")
   })
   
   output$out.diet <- renderText({

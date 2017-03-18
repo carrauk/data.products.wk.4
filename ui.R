@@ -28,7 +28,7 @@ shinyUI(fluidPage(
        
        sliderInput("in.days.on.diet",
                    "Select days on diet:",
-                   min=0, max=21, value=14
+                   min=1, max=21, value=14
                    )
        
     ),

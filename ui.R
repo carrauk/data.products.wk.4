@@ -35,6 +35,8 @@ shinyUI(fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
+       h4("Introduction to the application"),
+       textOutput("out.intro"),
        h4("Parameters entered (and resulting prediction)"),
        textOutput("out.diet"),
        textOutput("out.days.on.diet"),

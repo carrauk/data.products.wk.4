@@ -1,0 +1,55 @@
+---
+title: "Repoducible Pitch"
+author: "Adam Carr"
+date: "18/03/2017"
+output: 
+   slidy_presentation:
+      theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::read_chunk("ui.R")
+knitr::read_chunk("server.R")
+```
+
+## What is the application
+
+- It is a simple app that predicts the weight of a chick based on the the diet selected and time in days the chick was on the diet.
+- It is based on easy to obtain information - The ChickWeight dataset available in the datasets package within R.
+- It is basically a submission for the coursea course - data products.
+
+## The prediction model (includes R code)
+
+- a simple linear model is created based on the ChickWeight data for the given diet.
+
+```{r}
+data("ChickWeight")
+input.diet <- "1"; input.days <- 9 # these would be an input to the app!
+# simple model
+mdl <- lm(weight ~ Time,data=ChickWeight[ChickWeight$Diet==input.diet,])
+```
+
+## How the model is used 1 
+- a plot is generated:
+```{r plot, eval=TRUE, fig.height=3, fig.width=5, fig.align='center'}
+plot(predict(mdl, data.frame(Time=c(1:22))),
+     type="b",col="blue",
+     main=sprintf("Predicted weight for chick on experimental diet %s",input.diet),
+     xlab="time on diet (days)", ylab="Weight (gm)")
+abline(v=input.days,col="red")
+abline(h=predict(mdl, data.frame(Time=c(input.days))),col="red")
+```
+
+## How the model is used 2
+
+
+- a prediction is made
+```{r}
+pred.wt <- sprintf("[%s gm]", predict(mdl, data.frame(Time=c(input.days))))
+```
+
+- The result : `r pred.wt`
+
+
+
